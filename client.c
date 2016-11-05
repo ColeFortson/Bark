@@ -2,6 +2,7 @@
 BARK
 Client.c
  */
+#include <unistd.h>
 #include<stdio.h> //printf
 #include<string.h>    //strlen
 #include<sys/socket.h>    //socket
