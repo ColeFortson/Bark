@@ -1,6 +1,9 @@
+#ifndef KEYGEN_H
+#define KEYGEN_H 
 #include <stdio.h>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
+#include <stdbool.h>
 
 bool generate_key()
 {
@@ -46,3 +49,4 @@ free_all:
     
     return (ret == 1);
 }
+#endif

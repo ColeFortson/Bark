@@ -8,6 +8,7 @@ Client.c
 #include<sys/socket.h>    //socket
 #include<arpa/inet.h> //inet_addr
 #include<netinet/in.h>
+#include"keygen.h"
 
 int main(int argc , char *argv[])
 {
@@ -23,11 +24,7 @@ int main(int argc , char *argv[])
     }
     puts("Socket created");
     
-<<<<<<< HEAD
-    server.sin_addr.s_addr = INADDR_ANY;
-=======
     server.sin_addr.s_addr = inet_addr("192.168.1.206");
->>>>>>> 4a97d2d574185eda3a623574facd6a46f36a1a6d
     server.sin_family = AF_INET;
     server.sin_port = htons( 8888 );
     
@@ -39,6 +36,7 @@ int main(int argc , char *argv[])
     }
     
     puts("Connected\n");
+    generate_key();
     
     //keep communicating with server
     while(1)
