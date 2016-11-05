@@ -48,10 +48,6 @@ int main(int argc , char *argv[])
     puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
     
-    
-    //Accept and incoming connection
-    puts("Waiting for incoming connections...");
-    c = sizeof(struct sockaddr_in);
     while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) )
     {
         puts("Connection accepted");
@@ -90,16 +86,10 @@ void *connection_handler(void *socket_desc)
     int read_size;
     char *message , client_message[2000];
     
-    //Send some messages to the client
-    message = "Greetings! I am your connection handler\n";
-    write(sock , message , strlen(message));
-    
-    message = "Now type something and i shall repeat what you type \n";
-    write(sock , message , strlen(message));
-    
     //Receive a message from client
     while( (read_size = recv(sock , client_message , 2000 , 0)) > 0 )
     {
+        puts(client_message);
         //Send the message back to client
         write(sock , client_message , strlen(client_message));
     }

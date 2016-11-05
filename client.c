@@ -7,6 +7,7 @@ Client.c
 #include<string.h>    //strlen
 #include<sys/socket.h>    //socket
 #include<arpa/inet.h> //inet_addr
+#include<netinet/in.h>
 
 int main(int argc , char *argv[])
 {
@@ -22,7 +23,7 @@ int main(int argc , char *argv[])
     }
     puts("Socket created");
     
-    server.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server.sin_addr.s_addr = INADDR_ANY;
     server.sin_family = AF_INET;
     server.sin_port = htons( 8888 );
     
@@ -40,7 +41,10 @@ int main(int argc , char *argv[])
     {
         printf("Enter message : ");
         scanf("%s" , message);
-        
+
+        for(int i = 0; message[i] != 0; ++i)
+                message[i] += 1;
+
         //Send some data
         if( send(sock , message , strlen(message) , 0) < 0)
         {
@@ -54,8 +58,9 @@ int main(int argc , char *argv[])
             puts("recv failed");
             break;
         }
-        
         puts("Server reply :");
+        for(int i = 0; server_reply[i] != 0; ++i)
+                server_reply[i] -= 1;
         puts(server_reply);
     }
     
