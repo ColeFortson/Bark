@@ -1,73 +1,63 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+/*
+BARK
+Client.c
+ */
+#include<stdio.h> //printf
+#include<string.h>    //strlen
+#include<sys/socket.h>    //socket
+#include<arpa/inet.h> //inet_addr
 
-#define PORT 3490
-#define MAXSIZE 1024
-
-int main(int argc, char *argv[])
+int main(int argc , char *argv[])
 {
-    struct sockaddr_in server_info;
-    struct hostent *he;
-    int socket_fd,num;
-    char buffer[1024];
+    int sock;
+    struct sockaddr_in server;
+    char message[1000] , server_reply[2000];
     
-    char buff[1024];
+    //Create socket
+    sock = socket(AF_INET , SOCK_STREAM , 0);
+    if (sock == -1)
+    {
+        printf("Could not create socket");
+    }
+    puts("Socket created");
     
-    if (argc != 2) {
-        fprintf(stderr, "Usage: client hostname\n");
-        exit(1);
+    server.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server.sin_family = AF_INET;
+    server.sin_port = htons( 8888 );
+    
+    //Connect to remote server
+    if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
+    {
+        perror("connect failed. Error");
+        return 1;
     }
     
-    if ((he = gethostbyname(argv[1]))==NULL) {
-        fprintf(stderr, "Cannot get host name\n");
-        exit(1);
-    }
+    puts("Connected\n");
     
-    if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0))== -1) {
-        fprintf(stderr, "Socket Failure!!\n");
-        exit(1);
-    }
-    
-    memset(&server_info, 0, sizeof(server_info));
-    server_info.sin_family = AF_INET;
-    server_info.sin_port = htons(PORT);
-    server_info.sin_addr = *((struct in_addr *)he->h_addr);
-    if (connect(socket_fd, (struct sockaddr *)&server_info, sizeof(struct sockaddr))<0) {
-        //fprintf(stderr, "Connection Failure\n");
-        perror("connect");
-        exit(1);
-    }
-    
-    //buffer = "Hello World!! Lets have fun\n";
-    //memset(buffer, 0 , sizeof(buffer));
-    while(1) {
-        fgets(buffer,MAXSIZE-1,stdin);
-        if ((send(socket_fd,buffer, strlen(buffer),0))== -1) {
-            fprintf(stderr, "Failure Sending Message\n");
-            close(socket_fd);
-            exit(1);
+    //keep communicating with server
+    while(1)
+    {
+        printf("Enter message : ");
+        scanf("%s" , message);
+        
+        //Send some data
+        if( send(sock , message , strlen(message) , 0) < 0)
+        {
+            puts("Send failed");
+            return 1;
         }
-        else {
-            printf("Message being sent: %s\n",buffer);
+        
+        //Receive a reply from the server
+        if( recv(sock , server_reply , 2000 , 0) < 0)
+        {
+            puts("recv failed");
+            break;
         }
+        
+        puts("Server reply :");
+        puts(server_reply);
     }
     
-    /*if ((num = recv(socket_fd, buff, 1024,0))== -1) {
-     //fprintf(stderr,"Error in receiving message!!\n");
-     perror("recv");
-     exit(1);
-     }
-     //  num = recv(client_fd, buffer, sizeof(buffer),0);
-     buff[num] = '\0';
-     printf("Message received: %s\nNumber of bytes received: %d\n", buff,num);*/
-    close(socket_fd);
-    
+    close(sock);
+    return 0;
 }
