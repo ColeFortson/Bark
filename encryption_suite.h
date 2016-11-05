@@ -9,32 +9,46 @@
 #ifndef encryption_suite_h
 #define encryption_suite_h
 
-unsigned char* rsaEncrypt( RSA *pubKey, const unsigned char* str, int dataSize, int *resultLen )
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <openssl/rsa.h>
+#include <openssl/engine.h>
+#include <openssl/pem.h>
+
+#define PADDING RSA_PKCS1_PADDING
+
+RSA * createRSAWithFilename(char * filename,int public)
 {
-    int rsaLen = RSA_size( pubKey ) ;
-    unsigned char* ed = (unsigned char*)malloc( rsaLen ) ;
-    
-    // RSA_public_encrypt() returns the size of the encrypted data
-    // (i.e., RSA_size(rsa)). RSA_private_decrypt()
-    // returns the size of the recovered plaintext.
-    *resultLen = RSA_public_encrypt( dataSize, (const unsigned char*)str, ed, pubKey, PADDING ) ;
-    if( *resultLen == -1 )
-        printf("ERROR: RSA_public_encrypt: %s\n", ERR_error_string(ERR_get_error(), NULL));
-    
-    return ed ;
+            FILE * fp = fopen(filename,"rb");
+             
+                if(fp == NULL)
+                            {
+                                            printf("Unable to open file %s \n",filename);
+                                                    return NULL;    
+                                                        }
+                    RSA *rsa= RSA_new() ;
+                     
+                        if(public)
+                                    {
+                                                    rsa = PEM_read_RSA_PUBKEY(fp, &rsa,NULL, NULL);
+                                                        }
+                            else
+                                        {
+                                                        rsa = PEM_read_RSAPrivateKey(fp, &rsa,NULL, NULL);
+                                                            }
+                             
+                                return rsa;
 }
 
-unsigned char* rsaDecrypt( RSA *privKey, const unsigned char* encryptedData, int *resultLen )
+int padding = RSA_PKCS1_PADDING;
+ 
+int public_encrypt(unsigned char * data,int data_len,unsigned char * key, unsigned char *encrypted)
 {
-    int rsaLen = RSA_size( privKey ) ; // That's how many bytes the decrypted data would be
-    
-    unsigned char *decryptedBin = (unsigned char*)malloc( rsaLen ) ;
-    *resultLen = RSA_private_decrypt( RSA_size(privKey), encryptedData, decryptedBin, privKey, PADDING ) ;
-    if( *resultLen == -1 )
-        printf( "ERROR: RSA_private_decrypt: %s\n", ERR_error_string(ERR_get_error(), NULL) ) ;
-    
-    return decryptedBin ;
+            RSA * rsa = createRSAWithFilename(key,1);
+                int result = RSA_public_encrypt(data_len,data,encrypted,rsa,padding);
+                    return result;
 }
-
 
 #endif /* encryption_suite_h */
