@@ -26,13 +26,12 @@ main(void)
 
         /* init values */
         mpz_t P, G, a, b, A, B, sec_a, sec_b;
-        mpz_init(A); mpz_init(B);
-        mpz_init(sec_a); mpz_init(sec_b);
-        
         mpz_init_set_str(P, prime, 10);
         mpz_init_set_ui(G, 2);
         mpz_init_set_ui(a, as);
         mpz_init_set_ui(b, bs);
+        mpz_init(A); mpz_init(B);
+        mpz_init(sec_a); mpz_init(sec_b);
 
         /* compute A and B */
         mpz_powm_sec(A, G, a, P);
@@ -51,44 +50,40 @@ main(void)
         gcry_md_hash_buffer(GCRY_MD_SHA256, key, out, 256);
 
         /* test data 63 (+ 1) bytes */
-        const uint8_t *pt = "a this is a test this is a testa this is a testa this is a test";
-        size_t len = strlen(pt) + 1;
-        printf("plaintext: %s\n", pt);
-
-        uint8_t *enc = malloc(len);
-        uint8_t *dec = malloc(len);
+        uint8_t *t = malloc(64);
+        strncpy(t, "a this is a test this is a testa this is a testa this is a test", 63);
+        size_t len = strlen(t) + 1;
+        printf("plaintext: %s\n", t);
 
         /* init cipher context */
         gcry_cipher_hd_t hd;
         gcry_error_t err;
-
         uint8_t *iv = malloc(BLK_LEN);
-        gcry_create_nonce(iv, BLK_LEN);
 
+        gcry_create_nonce(iv, BLK_LEN);
         gcry_cipher_open(&hd, GCRY_CIPHER_AES256, GCRY_CIPHER_MODE_ECB, 0);
         gcry_cipher_setkey(hd, key, KEY_LEN);
         gcry_cipher_setiv(hd, iv, BLK_LEN);
 
         /* encrypt and decrypt */
-        err = gcry_cipher_encrypt(hd, enc, len, pt, len);
+        err = gcry_cipher_encrypt(hd, t, len, NULL, 0);
         if(err) 
                 printf("error %s\n", gcry_strsource(err));
         printf("ciphertext: ");
         for(int i = 0; i < len; ++i)
-                printf("%02x", enc[i]);
+                printf("%02x", t[i]);
         puts("\n");
 
-        err = gcry_cipher_decrypt(hd, dec, len, enc, len);
+        err = gcry_cipher_decrypt(hd, t, len, NULL, 0);
         if(err)
                 printf("error %s\n", gcry_strsource(err));
-        printf("decrypted: %s\n", dec);
+        printf("decrypted: %s\n", t);
 
         /* cleanup */
         gcry_cipher_close(hd);
         mpz_clears(P, G, a, b, A, B, sec_a, sec_b, NULL);
         free(out);
         free(key);
-        free(enc);
-        free(dec);
+        free(t);
         free(iv);
 }
