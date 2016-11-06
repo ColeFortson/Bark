@@ -10,3 +10,5 @@ woof woof
 1. Rewrite server in twisted/python
 2. Diffe-Hellman key exchange
 3. Scrap RSA for AES implementation
+4. Make code run on web server
+5. Write web based text input & GUI
