@@ -9,7 +9,7 @@ static const char *prime = "1671963898901890651310302201944317774129278376605850
 
 #define GENERATOR 2
 #define NEAREST_M16(x) (((x - 1) | 15) + 1)
-#define RANDOM_SIZEB 64
+#define RANDOM_SIZEB 8 
 #define BLK_LEN (gcry_cipher_get_algo_blklen(GCRY_CIPHER_AES256))
 #define KEY_LEN (gcry_cipher_get_algo_keylen(GCRY_CIPHER_AES256))
 
