@@ -51,7 +51,7 @@ main(void)
 
         /* test data 63 (+ 1) bytes */
         uint8_t *t = malloc(64);
-        strcpy(t, "a this is a test this is a testa this is a testa this is a test");
+        strncpy(t, "a this is a test this is a testa this is a testa this is a test", 63);
         size_t len = strlen(t) + 1;
         printf("plaintext: %s\n", t);
 
