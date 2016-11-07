@@ -83,7 +83,7 @@ dest_diffe_ctx(struct diffe_ctx **in)
 }
 
 uint8_t  *
-gen_payload(uint8_t  *buf, size_t len)
+gen_payload(uint8_t *buf, size_t len)
 {
         uint8_t *tmp = calloc(len + BLK_LEN, 1);
         uint8_t iv[BLK_LEN];

@@ -15,10 +15,7 @@ main(void)
         uint8_t *buf = NULL;
         size_t len = 0;
         getline(&buf, &len, stdin);
-        buf[len] = '\0';
-
         uint8_t *pt = gen_payload(buf, len);
-        printf("plaintext: %s", buf); 
 
         /* init cipher context */
         gcry_cipher_hd_t hd;
@@ -42,7 +39,7 @@ main(void)
                 printf("ERROR");
                 exit(err);
         }
-        printf("\ndecrypted: %s\n", pt + BLK_LEN);
+        printf("\ndecrypted: %s", pt + BLK_LEN);
 
         /* cleanup */
         gcry_cipher_close(hd);
