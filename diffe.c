@@ -21,7 +21,7 @@ main(void)
         printf("plaintext: %s", buf); 
         for(int i = 0; i < len + BLK_LEN; ++i)
                 printf("%02x", pt[i]);
-        put("\n");
+        puts("\n");
 
         gmp_printf("PRIME: %Zu\n", user1->kctx->P);
         gmp_printf("GENERATOR: %Zu\n", user1->kctx->G);
