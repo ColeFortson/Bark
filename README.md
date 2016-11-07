@@ -5,6 +5,11 @@ Created by your best friends Grif and Cole in his mom's basement
 
 *woof woof*
 
+# Dependencies
+
+1. libgcrypt
+2. gmp
+
 # TODO
 
 1. Rewrite server in twisted/python
