@@ -23,6 +23,11 @@ main(void)
                 printf("%02x", pt[i]);
         put("\n");
 
+        gmp_printf("PRIME: %Zu\n", user1->kctx->P);
+        gmp_printf("GENERATOR: %Zu\n", user1->kctx->G);
+        gmp_printf("SECRET: %Zu\n", user1->sec);
+
+
         /* init cipher context */
         gcry_cipher_hd_t hd;
         gcry_error_t err;
