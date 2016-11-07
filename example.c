@@ -28,7 +28,7 @@ main(void)
                 printf("%02x", pt[i]);
 
         decrypt(&cctx, pt, len);
-        printf("%s", pt + BLK_LEN); 
+        printf("\ndecrypted: %s", pt + BLK_LEN); 
 
         /* cleanup */
         dest_cipher_ctx(&cctx);
