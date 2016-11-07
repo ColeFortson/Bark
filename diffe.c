@@ -12,21 +12,13 @@ main(void)
         gen_shared_secret(&user2, user1->A);
 
         /* test data */
-        char *buf = NULL;
+        uint8_t *buf = NULL;
         size_t len = 0;
         getline(&buf, &len, stdin);
         buf[len] = '\0';
 
-        char *pt = gen_payload(buf, len);
+        uint8_t *pt = gen_payload(buf, len);
         printf("plaintext: %s", buf); 
-        for(int i = 0; i < len + BLK_LEN; ++i)
-                printf("%02x", pt[i]);
-        puts("\n");
-
-        gmp_printf("PRIME: %Zu\n", user1->kctx->P);
-        gmp_printf("GENERATOR: %Zu\n", user1->kctx->G);
-        gmp_printf("SECRET: %Zu\n", user1->sec);
-
 
         /* init cipher context */
         gcry_cipher_hd_t hd;

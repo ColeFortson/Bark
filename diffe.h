@@ -23,7 +23,7 @@ struct keygen_ctx {
 
 struct diffe_ctx {
         mpz_t A, sec;
-        char *shared, *key;
+        uint8_t *shared, *key;
         struct keygen_ctx *kctx;
 };
 
@@ -82,11 +82,11 @@ dest_diffe_ctx(struct diffe_ctx **in)
         free(*in);
 }
 
-char *
-gen_payload(char *buf, size_t len)
+uint8_t  *
+gen_payload(uint8_t  *buf, size_t len)
 {
-        char *tmp = calloc(len + BLK_LEN, 1);
-        char iv[BLK_LEN];
+        uint8_t *tmp = calloc(len + BLK_LEN, 1);
+        uint8_t iv[BLK_LEN];
         gcry_create_nonce(iv, BLK_LEN);
         strncpy(tmp, iv, BLK_LEN); 
         strncpy(tmp + BLK_LEN, buf, len);
