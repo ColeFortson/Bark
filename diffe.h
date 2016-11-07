@@ -48,7 +48,7 @@ init_diffe_ctx(struct diffe_ctx **dctx)
         (*dctx)->key = NULL;
         init_keygen_ctx(&((*dctx)->kctx));
         
-        mpz_init_set_ui((*dctx)->sec, gmp_urandomb_ui((*dctx)->kctx->state, RANDOM_SIZEB * 4));
+        mpz_init_set_ui((*dctx)->sec, gmp_urandomb_ui((*dctx)->kctx->state, RANDOM_SIZEB * 8));
         mpz_powm_sec((*dctx)->A, (*dctx)->kctx->G, (*dctx)->sec, (*dctx)->kctx->P);
 }
 
