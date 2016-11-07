@@ -15,6 +15,7 @@ main(void)
         char *buf = NULL;
         size_t len = 0;
         getline(&buf, &len, stdin);
+        buf[len] = '\0';
 
         uint8_t *pt = gen_payload(buf, len);
         printf("plaintext: %s", buf); 
