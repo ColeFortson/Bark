@@ -17,7 +17,7 @@ main(void)
         getline(&buf, &len, stdin);
         buf[len] = '\0';
 
-        uint8_t *pt = gen_payload(buf, len);
+        char *pt = gen_payload(buf, len);
         printf("plaintext: %s", buf); 
 
         /* init cipher context */
