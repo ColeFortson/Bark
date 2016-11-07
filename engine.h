@@ -16,24 +16,22 @@ init_cipher_ctx(struct cipher_ctx **cctx, struct diffe_ctx *dctx)
         gcry_cipher_setkey((*cctx)->hd, dctx->key, KEY_LEN);
 }
 
-void 
+gcry_error_t  
 encrypt(struct cipher_ctx **cctx, uint8_t *buf, size_t len)
 {
         (*cctx)->err = gcry_cipher_encrypt((*cctx)->hd, buf, len, NULL, 0);
-        if((*cctx)->err) {
-                printf("error: %s\n", gcry_strsource((*cctx)->err));
-                exit((*cctx)->err);
-        }
+        if((*cctx)->err) 
+                return (*cctx)->err;
+        return 0;
 }
 
-void
+gcry_error_t
 decrypt(struct cipher_ctx **cctx, uint8_t *buf, size_t len)
 {
         (*cctx)->err = gcry_cipher_decrypt((*cctx)->hd, buf, len, NULL, 0);
-        if((*cctx)->err) {
-                printf("error: %s\n", gcry_strsource((*cctx)->err));
-                exit((*cctx)->err);
-        }
+        if((*cctx)->err) 
+                return (*cctx)->err;
+        return 0;
 }
 
 void

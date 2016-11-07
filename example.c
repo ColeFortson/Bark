@@ -13,7 +13,7 @@ main(void)
         struct cipher_ctx *cctx1, *cctx2;
         init_diffe_ctx(&user1); init_diffe_ctx(&user2);
 
-        /* each user computes shared key and generates cipher contexts */
+        /* each user computes shared secret to generate their key */
         gen_shared_secret(&user1, user2->A);
         gen_shared_secret(&user2, user1->A);
         init_cipher_ctx(&cctx1, user1);
@@ -27,14 +27,23 @@ main(void)
         printf("plaintext: %s", buf);
 
         /* encrypt with user1's context */
-        encrypt(&cctx1, pt, len);
+        gcry_error_t err = encrypt(&cctx1, pt, len);
+        if(err) {
+                printf("%s\n", gcry_strsource(err));
+                exit(err);
+        }
 
         printf("ciphertext: ");
         for(int i = BLK_LEN; i < len; ++i)
                 printf("%02x", pt[i]);
 
-        /* decrypt with user2's context */
-        decrypt(&cctx2, pt, len);
+        /* decrypt with user2's context (tests that both independently
+         * generated keys are equal */
+        err = decrypt(&cctx2, pt, len);
+        if(err) {
+                printf("%s\n", gcry_strsource(err));
+                exit(err);
+        }
         printf("\ndecrypted: %s", pt + BLK_LEN); 
 
         /* cleanup */
