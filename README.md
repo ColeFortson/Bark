@@ -10,6 +10,11 @@ Created by your best friends Grif and Cole in his mom's basement
 1. libgcrypt
 2. gmp
 
+# Installation
+
+1. Install Dependencies
+2. Run client
+
 # TODO
 
 1. Rewrite server in twisted/python
