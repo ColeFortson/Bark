@@ -1,6 +1,7 @@
 /* Diffe-Hellman key exchange proof of concept by Grif Hughes - ghughes@smu.edu */
 
 #include "diffe.h"
+#include <stdio.h>
 
 int 
 main(void)
