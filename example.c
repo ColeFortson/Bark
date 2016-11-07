@@ -6,13 +6,18 @@
 int 
 main(void)
 {
+        /* simulate two users */
         struct diffe_ctx *user1, *user2;
-        struct cipher_ctx *cctx;
+
+        /* each user has different cipher context */
+        struct cipher_ctx *cctx1, *cctx2;
         init_diffe_ctx(&user1); init_diffe_ctx(&user2);
 
+        /* each user computes shared key and generates cipher contexts */
         gen_shared_secret(&user1, user2->A);
         gen_shared_secret(&user2, user1->A);
-        init_cipher_ctx(&cctx, user1);
+        init_cipher_ctx(&cctx1, user1);
+        init_cipher_ctx(&cctx2, user2);
 
         /* test data */
         char *buf = NULL;
@@ -21,18 +26,21 @@ main(void)
         uint8_t *pt = gen_payload(buf, len);
         printf("plaintext: %s", buf);
 
-        encrypt(&cctx, pt, len);
+        /* encrypt with user1's context */
+        encrypt(&cctx1, pt, len);
 
         printf("ciphertext: ");
         for(int i = BLK_LEN; i < len; ++i)
                 printf("%02x", pt[i]);
 
-        decrypt(&cctx, pt, len);
+        /* decrypt with user2's context */
+        decrypt(&cctx2, pt, len);
         printf("\ndecrypted: %s", pt + BLK_LEN); 
 
         /* cleanup */
         dest_diffe_ctx(&user1);
         dest_diffe_ctx(&user2);
-        dest_cipher_ctx(&cctx);
+        dest_cipher_ctx(&cctx1);
+        dest_cipher_ctx(&cctx2);
         free(pt);
 }
