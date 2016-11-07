@@ -51,35 +51,35 @@ init_diffe_ctx(struct diffe_ctx **dctx)
 }
 
 void
-gen_shared_secret(struct diffe_ctx **my, mpz_t your_A)
+gen_shared_secret(struct diffe_ctx **dctx, mpz_t your_A)
 {
         mpz_t tmp;
         mpz_init(tmp);
-        mpz_powm_sec(tmp, your_A, (*my)->sec, (*my)->kctx->P);
+        mpz_powm_sec(tmp, your_A, (*dctx)->sec, (*dctx)->kctx->P);
 
-        (*my)->shared = malloc(mpz_sizeinbase(tmp, BASE) + 2);        
-        mpz_get_str((*my)->shared, BASE, tmp);
+        (*dctx)->shared = malloc(mpz_sizeinbase(tmp, BASE) + 2);        
+        mpz_get_str((*dctx)->shared, BASE, tmp);
 
-        (*my)->key = malloc(KEY_LEN);
-        gcry_md_hash_buffer(GCRY_MD_SHA256, (*my)->key, (*my)->shared, 256);
+        (*dctx)->key = malloc(KEY_LEN);
+        gcry_md_hash_buffer(GCRY_MD_SHA256, (*dctx)->key, (*dctx)->shared, 256);
 }
 
 void 
-dest_keygen_ctx(struct keygen_ctx **in)
+dest_keygen_ctx(struct keygen_ctx **kctx)
 {
-        mpz_clears((*in)->P, (*in)->G, NULL);
-        gmp_randclear((*in)->state);
-        free(*in);
+        mpz_clears((*kctx)->P, (*kctx)->G, NULL);
+        gmp_randclear((*kctx)->state);
+        free(*kctx);
 }
 
 void 
-dest_diffe_ctx(struct diffe_ctx **in)
+dest_diffe_ctx(struct diffe_ctx **dctx)
 {
-        free((*in)->key);
-        free((*in)->shared);
-        mpz_clears((*in)->A, (*in)->sec, NULL);
-        dest_keygen_ctx(&((*in)->kctx));
-        free(*in);
+        free((*dctx)->key);
+        free((*dctx)->shared);
+        mpz_clears((*dctx)->A, (*dctx)->sec, NULL);
+        dest_keygen_ctx(&((*dctx)->kctx));
+        free(*dctx);
 }
 
 uint8_t  *

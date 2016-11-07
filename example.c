@@ -31,8 +31,8 @@ main(void)
         printf("\ndecrypted: %s", pt + BLK_LEN); 
 
         /* cleanup */
-        dest_cipher_ctx(&cctx);
         dest_diffe_ctx(&user1);
         dest_diffe_ctx(&user2);
+        dest_cipher_ctx(&cctx);
         free(pt);
 }
