@@ -23,8 +23,7 @@ struct keygen_ctx {
 
 struct diffe_ctx {
         mpz_t A, sec;
-        uint8_t *shared;
-        uint8_t *key;
+        uint8_t *shared, *key;
         struct keygen_ctx *kctx;
 };
 

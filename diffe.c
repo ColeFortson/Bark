@@ -17,7 +17,7 @@ main(void)
         getline(&buf, &len, stdin);
 
         uint8_t *pt = gen_payload(buf, len);
-        printf("plaintext: %s\n", buf); 
+        printf("plaintext: %s", buf); 
 
         /* init cipher context */
         gcry_cipher_hd_t hd;
@@ -27,15 +27,20 @@ main(void)
 
         /* encrypt and decrypt */
         err = gcry_cipher_encrypt(hd, pt, len, NULL, 0);
-        if(err) 
+        if(err) { 
+                printf("ERROR");
                 exit(err);
+        }
+
         printf("ciphertext: ");
         for(int i = BLK_LEN; i < len; ++i)
                 printf("%02x", pt[i]);
 
         err = gcry_cipher_decrypt(hd, pt, len, NULL, 0);
-        if(err)
+        if(err) { 
+                printf("ERROR");
                 exit(err);
+        }
         printf("\ndecrypted: %s\n", pt + BLK_LEN);
 
         /* cleanup */
