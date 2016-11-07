@@ -25,12 +25,14 @@ main(void)
         gcry_cipher_open(&hd, GCRY_CIPHER_AES256, GCRY_CIPHER_MODE_CBC, GCRY_CIPHER_CBC_CTS);
         gcry_cipher_setkey(hd, user1->key, KEY_LEN);
 
+        printf("enc\n");
         /* encrypt and decrypt */
         err = gcry_cipher_encrypt(hd, pt, len, NULL, 0);
         if(err) { 
                 printf("ERROR");
                 exit(err);
         }
+        printf("finish\n");
 
         printf("ciphertext: ");
         for(int i = BLK_LEN; i < len; ++i)
