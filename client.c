@@ -8,8 +8,6 @@ Client.c
 #include<sys/socket.h>    //socket
 #include<arpa/inet.h> //inet_addr
 #include<netinet/in.h>
-#include"encryption_suite.h"
-#include"keygen.h"
 
 int main(int argc , char *argv[])
 {
@@ -42,11 +40,12 @@ int main(int argc , char *argv[])
     //keep communicating with server
     while(1)
     {
-        printf("Enter message : ");
-        scanf("%s" , message);
-        unsigned char enc[1024];
+        printf("Enter message: ");
+        char *buf = NULL;
+        size_t len = 0;
+        getline(&buf, &len, stdin);
+        uint8_t 
         
-        public_encrypt(message, 13, "public.pem", enc);
 
         //Send some data
         if( send(sock , enc , strlen(enc) , 0) < 0)
