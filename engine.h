@@ -35,9 +35,9 @@ decrypt(struct cipher_ctx **cctx, uint8_t *buf, size_t len)
 }
 
 void
-dest_cipher_ctx(struct cipher_ctx **in)
+dest_cipher_ctx(struct cipher_ctx **cctx)
 {
-        gcry_cipher_close((*in)->hd);
+        gcry_cipher_close((*cctx)->hd);
 }
 
 #endif

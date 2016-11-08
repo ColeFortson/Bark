@@ -13,7 +13,9 @@ main(void)
         struct cipher_ctx *cctx1, *cctx2;
         init_diffe_ctx(&user1); init_diffe_ctx(&user2);
 
-        /* each user computes shared secret to generate their key */
+        /* each user computes shared secret to generate their key 
+         * in client/server, each user would exchange their A values
+         * */
         gen_shared_secret(&user1, user2->A);
         gen_shared_secret(&user2, user1->A);
         init_cipher_ctx(&cctx1, user1);
