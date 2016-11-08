@@ -13,6 +13,7 @@ Created by your best friends Grif and Cole in his mom's basement
 # Installation
 
 To run Diffe-Hellman example:
+
 1. Install Dependencies
 2. gcc example.c -o example -lgmp -lgcrypt
 3. ./example
