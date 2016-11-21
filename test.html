@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Webpage</title>
+        <script src="http://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
+        <script src="sha256.js"></script>
+        <script src="aes.js"></script>
+        <script>
+                function rand_num() {
+                        var buf = new Uint32Array(1);
+                        window.crypto.getRandomValues(buf);
+                        return buf[0];
+                }
+        </script>
+        <script>
+                function numbers() {
+                        var P = bigInt("16719638989018906513103022019443177741292783766058509585236442175152852400857057547800126886350046671452216300622593067838913809590756736851703111784112102869493543487024140270670735858753979111876731919875193357923727204127745393443504889829116838519273494671815743879708960480496628050302412483931054616240092747168301885301554687438693762103196901746216460422454153332018208854631330087200986944972994993317536616766835420809664841539967167149695266123101832929829861067792191714903262435494067436002975269646302045277813409669956280454260074037329111382714705016043320742439363098276805628405612911960431265324883");
+                        var G = bigInt(2);
+        
+                        var sec_a = rand_num(); 
+                        var sec_b = rand_num(); 
+
+                        var A = G.modPow(sec_a, P);
+                        var B = G.modPow(sec_b, P);
+
+                        var shared_a = B.modPow(sec_a, P);
+
+                        connect(A.toString());
+                        return CryptoJS.SHA256(shared_a.toString());
+                }
+        </script>
+        <script>
+                function enc() {
+                        var key = numbers();
+                        var iv = CryptoJS.lib.WordArray.random(16);
+                        var data = document.getElementById('text_in').value;
+                        var encd = CryptoJS.AES.encrypt(data, key, {iv: iv});
+                        document.getElementById('text_enc').value = encd;
+                        document.getElementById('text_out').value =
+                        CryptoJS.AES.decrypt(encd, key, {iv: iv}).toString(CryptoJS.enc.Utf8);
+                }
+        </script>
+        <script>
+                function connect(data) {
+                        var async = true;
+
+                        var url = "http://httpbin.org/post";
+                        var method = "POST";
+                        var request = new XMLHttpRequest();
+
+                        request.onload = function() {
+                                document.getElementById('text_res').value =
+                                        request.responseText;
+                        }
+
+                        request.open(method, url, async);
+                        request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+                        request.send(data);
+                }
+        </script>
+</head>
+<body>
+        <textarea id="text_in" rows="8" cols="40">enter message</textarea>
+        <textarea id="text_enc" rows="8" cols="40"></textarea>
+        <textarea id="text_out" rows="8" cols="40"></textarea>
+        <textarea id="text_res" rows="8" cols="40"></textarea>
+        <button onclick="enc()">Test</button>
+</body>
+</html>

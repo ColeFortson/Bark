@@ -8,6 +8,7 @@ Client.c
 #include<sys/socket.h>    //socket
 #include<arpa/inet.h> //inet_addr
 #include<netinet/in.h>
+#include "engine.h"
 
 int main(int argc , char *argv[])
 {
@@ -23,7 +24,7 @@ int main(int argc , char *argv[])
     }
     puts("Socket created");
     
-    server.sin_addr.s_addr = inet_addr("192.168.1.206");
+    server.sin_addr.s_addr = inet_addr("127.0.0.1");
     server.sin_family = AF_INET;
     server.sin_port = htons( 8888 );
     
@@ -35,25 +36,20 @@ int main(int argc , char *argv[])
     }
     
     puts("Connected\n");
-    generate_key();
+    struct diffe_ctx *user;
+    init_diffe_ctx(&user);
+
+        if( send(sock, user->A, 256, 0) < 0)
+        {
+            puts("Send failed");
+            return 1;
+        }
     
     //keep communicating with server
     while(1)
     {
         printf("Enter message: ");
-        char *buf = NULL;
-        size_t len = 0;
-        getline(&buf, &len, stdin);
-        uint8_t 
-        
 
-        //Send some data
-        if( send(sock , enc , strlen(enc) , 0) < 0)
-        {
-            puts("Send failed");
-            return 1;
-        }
-        
         //Receive a reply from the server
         if( recv(sock , server_reply , 2000 , 0) < 0)
         {
@@ -62,7 +58,7 @@ int main(int argc , char *argv[])
         }
         puts("Server reply :");
         for(int i = 0; server_reply[i] != 0; ++i)
-                server_reply[i] -= 1;
+                printf("%02x", server_reply[i]);
         puts(server_reply);
     }
     

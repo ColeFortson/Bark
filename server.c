@@ -91,7 +91,7 @@ void *connection_handler(void *socket_desc)
     {
         puts(client_message);
         //Send the message back to client
-        write(sock , client_message , strlen(client_message));
+        write(sock , client_message, strlen(client_message));
     }
     
     if(read_size == 0)
