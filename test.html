@@ -24,9 +24,12 @@
                         var B = G.modPow(sec_b, P);
 
                         var shared_a = B.modPow(sec_a, P);
+                        var shared_b = A.modPow(sec_b, P);
 
-                        connect(A.toString());
-                        return CryptoJS.SHA256(shared_a.toString());
+                        if(shared_a.equals(shared_b)) {
+                                connect(A.toString());
+                                return CryptoJS.SHA256(shared_a.toString());
+                        }
                 }
         </script>
         <script>
