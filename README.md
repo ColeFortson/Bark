@@ -20,8 +20,5 @@ To run Diffe-Hellman example:
 
 # TODO
 
-1. Rewrite server in twisted/python
-2. Diffe-Hellman key exchange (POC working)
-3. Scrap RSA for AES implementation (POC working)
-4. Make code run on web server
-5. Write web based text input & GUI
+1. Acquire AWS NGINX server 
+2. Messaging protocol
